@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Homepage{% endblock %}
+
+{% block body %}
+  You are awesome, Andrea! 
+<br>
+<br>
+Let's search for some books. 
+<br>
+<br>
+<form action="/interim-search" method="POST">
+    Search:<input type="text" name="booksearch">
+    <input type="submit" value="Search for a book!">
+</form>
+    
+{% endblock %}

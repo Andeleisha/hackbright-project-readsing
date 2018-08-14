@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Interim Search{% endblock %}
+
+{% block body %}
+  This page will show a list of possible search items based on what the user entered. 
+    <form action="/search" method="POST">
+    {% for book in search_results %}
+    <br>
+    <input type="radio" name="bookselect" value={{ book["best_book"]["id"]["#text"] }}>
+    <input type="submit" value="Choose this book">
+    <img src={{ book.best_book.small_image_url }} id=bookcover>
+    Title: {{ book.best_book.title }}
+    Author: {{ book.best_book.author.name }}
+    <br>
+  {% endfor %}
+</form>
+
+
+
+
+    
+{% endblock %}
