@@ -59,6 +59,7 @@ def my_music():
 @app.route("/interim-search", methods=["POST"])
 def interim_search():
     # List of possible selections to choose from
+    # TO DO: Error handling if not 200 response 
     raw_user_search = request.form["booksearch"]
 
     search_url = "https://www.goodreads.com/search/index.xml"
@@ -86,6 +87,9 @@ def search():
     # For loop: for each key phrase/sentiment/boook title/author, search spotify
     # Rank playlists
     # Return render playlists
+    # TO DO: Error handling
+    # TO DO: Clean book description
+    
     book_id = request.form["bookselect"]
 
     search_url = "https://www.goodreads.com/book/show/"
@@ -104,7 +108,6 @@ def search():
 
     book_description = book_info["description"]
 
-    # Commented out to avoid hitting rate limit
     nlp_url = "https://proxem-term-extraction-v1.p.mashape.com/api/TermExtraction/Extract?method=0&nbtopterms=20"
     
     nlp_params = {
@@ -124,7 +127,7 @@ def search():
     for each_term in terms_dict["terms"]:
         terms_list.append(each_term["term"])
 
-    test_terms = ['wizarding', 'lord voldemort', 'harry', 'hogwarts', 'tells him the truth about', 'wildly imaginative', 'relatives', 'evil', 'wizarding world', 'high-stakes', 'an unforgettable', 'life', 'wizardry', 'magical powers', 'assembles', 'heartless', 'bottling', 'vanish', 'feels like']
+    # test_terms = ['wizarding', 'lord voldemort', 'harry', 'hogwarts', 'tells him the truth about', 'wildly imaginative', 'relatives', 'evil', 'wizarding world', 'high-stakes', 'an unforgettable', 'life', 'wizardry', 'magical powers', 'assembles', 'heartless', 'bottling', 'vanish', 'feels like']
 
     sp_token_url = "https://accounts.spotify.com/api/token"
 
