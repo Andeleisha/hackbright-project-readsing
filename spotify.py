@@ -42,6 +42,8 @@ def get_sorted_playlists(terms_list):
     }
         key_term_playlists_request = requests.get(url=search_api_endpoint, headers=authorization_header, params=search_args)
         key_term_playlists = json.loads(key_term_playlists_request.text)
+
+
         
         for each_playlist in key_term_playlists["playlists"]["items"]:
             if each_playlist["id"] not in all_playlists_dict:

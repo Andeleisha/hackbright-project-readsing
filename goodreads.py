@@ -9,22 +9,37 @@ GR_DEV_KEY = os.environ["GOODREADS_DEV_KEY"]
 
 ##############################################################################
 
-
-def search_for_book(user_search):
-    """Takes in a string and searches Goodreads API by title, author, and ISBN."""
-
+def search_goodreads(search_string):
+    """Takes in a string and searches Goodreads API by title, author, and ISBN, returns a response object."""
     search_url = "https://www.goodreads.com/search/index.xml"
 
     search_params = {
-        "q" : user_search, 
+        "q" : search_string, 
         "key" : GR_DEV_KEY
     }
 
     response = requests.get(url=search_url, params=search_params)
 
-    response_dict = xmltodict.parse(response.content)
+    return response
 
-    search_results = response_dict["GoodreadsResponse"]["search"]["results"]["work"]
+def parse_search_goodreads(search_response):
+    """Takes the response object from Goodreads and returns a list of book objects."""
+
+    if search_response.status_code != 200:
+        print(search_response.status_code)
+        search_results = "Error"
+    else:
+        response_dict = xmltodict.parse(search_response.content)
+        search_results = response_dict["GoodreadsResponse"]["search"]["results"]["work"]
+
+    return search_results
+
+def search_for_book(user_search):
+    """Searches Goodreads and returns a list of book objects"""
+
+    response = search_goodreads(user_search)
+
+    search_results = parse_search_goodreads(response)
 
     return search_results
 

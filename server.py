@@ -1,8 +1,4 @@
 from flask import Flask, request, redirect, g, render_template
-import requests
-import os
-import xmltodict
-import json
 import goodreads
 import nlp
 import spotify
@@ -10,9 +6,6 @@ import spotify
 
 ##############################################################################
 app = Flask(__name__)
-
-SPOTIFY_CLIENT_ID = os.environ["SPOTIFY_CLIENT_ID"]
-SPOTIFY_CLIENT_SECRET = os.environ["SPOTIFY_CLIENT_SECRET"]
 
 ##############################################################################
 
@@ -33,7 +26,10 @@ def interim_search():
 
     search_results = goodreads.search_for_book(raw_user_search)
 
-    return render_template("interim-search.html", search_results=search_results)
+    if search_results == "Error":
+        return render_template("error.html")
+    else:
+        return render_template("interim-search.html", search_results=search_results)
 
 @app.route("/search", methods=["POST"])
 def search():
