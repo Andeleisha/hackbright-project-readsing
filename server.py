@@ -166,9 +166,15 @@ def search():
             else:
                 all_playlists_count[each_playlist["id"]] += 1
 
-    sorted_playlists = sorted(((v, k) for (k, v) in all_playlists_count.items()), reverse=True)
+    ids_sorted_playlists = sorted(((v, k) for (k, v) in all_playlists_count.items()), reverse=True)
 
-    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists, all_playlists=all_playlists_dict)
+    sorted_playlists = []
+
+    for playlist in ids_sorted_playlists:
+        playlist_id = playlist[1]
+        sorted_playlists.append(all_playlists_dict[playlist_id])
+
+    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists)
 
 @app.route("/goodreads-login")
 def goodreads_login():

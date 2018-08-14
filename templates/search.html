@@ -15,10 +15,9 @@
   {{ book.authors.author[0].name }}
 <br>
 <br>
-{% for playlist_tuple in sorted_playlists %}
-    {{ playlist_tuple[1] }}
+{% for playlist in sorted_playlists %}
+    {{ playlist["name"] }}
+    <br>
 {% endfor %}
-
-{{ all_playlists["543BzyCJEwN4kgnQnqi1qb"]["name"] }}
     
 {% endblock %}
