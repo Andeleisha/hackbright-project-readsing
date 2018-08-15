@@ -11,8 +11,8 @@
   <br>
   <img src={{ book.small_image_url }} id="bookcover">
   <h2>{{ book.title }}</h2>
-  {{ book.description }}
-  {{ book.authors.author[0].name }}
+  {{ book_description }}
+  {{ book.authors.author.name }}
 <br>
 <br>
 {% for playlist in sorted_playlists %}

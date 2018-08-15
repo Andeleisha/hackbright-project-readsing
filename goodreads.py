@@ -2,6 +2,7 @@
 import os
 import xmltodict 
 import requests
+import re
 
 ##############################################################################
 
@@ -64,6 +65,9 @@ def search_book_by_id(book_id):
 def clean_book_description(book_info):
     """Takes in a book dictionary and returns a clean book description."""
 
-    book_description = book_info["description"]
+    raw_book_description = book_info["description"]
+
+    clean = re.compile('<.*?>')
+    book_description = re.sub(clean, '', raw_book_description)
 
     return book_description

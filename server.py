@@ -12,11 +12,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def homepage():
-    # Landing page, main page to start searches from
-    # Must log in to spotify to search (redirect to Spotify Login, then Spotify Callback)
-
-    # Search for book title, author, etc
-    # Dropdown from search bar shows results, user clicks to submit to /search
+    # TO DO Dropdown from search bar shows results, user clicks to submit to /search
     return render_template("homepage.html")
 
 @app.route("/interim-search", methods=["POST"])
@@ -40,11 +36,13 @@ def search():
 
     book_info = goodreads.search_book_by_id(book_id)
 
-    terms_list = nlp.get_key_terms(book_info) 
+    book_description = goodreads.clean_book_description(book_info)
+
+    terms_list = nlp.get_key_terms(book_description) 
 
     sorted_playlists = spotify.get_sorted_playlists(terms_list)
 
-    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists)
+    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists, book_description=book_description)
 
 @app.route("/goodreads-login")
 def goodreads_login():

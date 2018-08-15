@@ -11,10 +11,10 @@ PROXEM_API_KEY = os.environ["PROXEM_API_KEY"]
 ##############################################################################
 
 
-def get_key_terms(book_info):
+def get_key_terms(book_description):
     """Takes in a book dictionary and returns a list of key terms."""
 
-    book_description = clean_book_description(book_info)
+    # book_description = clean_book_description(book_info)
 
     nlp_url = "https://proxem-term-extraction-v1.p.mashape.com/api/TermExtraction/Extract?method=0&nbtopterms=20"
     
@@ -26,7 +26,7 @@ def get_key_terms(book_info):
 
     }
    
-    nlp_response = requests.post(url=nlp_url, headers=nlp_params, data=book_description)
+    nlp_response = requests.post(url=nlp_url, headers=nlp_params, data=book_description.encode('utf-8'))
 
     terms_dict = json.loads(nlp_response.content)
 
