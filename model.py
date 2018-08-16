@@ -18,7 +18,7 @@ class Book(db.Model):
     gr_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(100), nullable=False)
     author = db.Column(db.String(50), nullable=False)
-    description = db.Column(db.String(1000), nullable=False)
+    description = db.Column(db.Text, nullable=False)
     image = db.Column(db.String(200), nullable=False)
     sm_image = db.Column(db.String(200), nullable=False)
 

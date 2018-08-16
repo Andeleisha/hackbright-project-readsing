@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, g, render_template
 import goodreads
 import nlp
 import spotify
+from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect_to_db
 
 
 ##############################################################################
@@ -34,7 +35,7 @@ def search():
 
     book_id = request.form["bookselect"]
 
-    book_info = goodreads.search_book_by_id(book_id)
+    book_info = goodreads.get_book_by_id(book_id)
 
     book_description = goodreads.clean_book_description(book_info)
 
@@ -96,4 +97,6 @@ def my_music():
     pass
 
 if __name__ == "__main__":
+    connect_to_db(app)
     app.run(debug=True, port=8080, host="0.0.0.0")
+    
