@@ -10,6 +10,7 @@ from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect
 GR_DEV_KEY = os.environ["GOODREADS_DEV_KEY"]
 
 ##############################################################################
+"""Queries used to search for books and display them in interim search"""
 
 def search_goodreads(search_string):
     """Takes in a string and searches Goodreads API by title, author, and ISBN, returns a response object."""
@@ -45,8 +46,10 @@ def search_for_book(user_search):
 
     return search_results
 
+##############################################################################
+
 def search_book_by_id(book_id):
-    """Takes in an integer and gets the book with that Goodreads ID."""
+    """Takes in an integer and searches Goodreads the book with that Goodreads ID."""
     search_url = "https://www.goodreads.com/book/show/"
 
     search_params = {
@@ -60,7 +63,7 @@ def search_book_by_id(book_id):
     return response
 
 def transform_book_object(book_object):
-    """Takes in the raw JSON response and returns a dictionary"""
+    """Takes in the raw JSON response and returns an uncleaned dictionary"""
 
     response_dict = xmltodict.parse(book_object.content)
 
@@ -69,40 +72,81 @@ def transform_book_object(book_object):
     return book_info
 
 def transform_multi_authors(book_object):
-    """If a book has multiple authors, replace the list with the first author in the list."""
+    """If a book has multiple authors, the author is equal to the first author in the list."""
 
     book_info = book_object
 
     if type(book_info["authors"]["author"]) == list:
-        book_info["authors"]["author"] = book_info["authors"]["author"][0]
+        author = book_info["authors"]["author"][0]["name"]
+    else:
+        author = book_info["authors"]["author"]["name"]
 
-    return book_info
+    return author
 
+def clean_book_description(book_object):
+    """Takes in a book dictionary and returns a clean book description."""
+
+    raw_book_description = book_object["description"]
+
+    clean = re.compile('<.*?>')
+    book_description = re.sub(clean, '', raw_book_description)
+
+    return book_description
+
+def transform_book_info_to_dict(book_object):
+    """Turns the book object into a dictionary with only the information used by the app."""
+
+    book_dict = { "book_id" : "New",
+                    "gr_id" : book_object["id"], 
+                    "name" : book_object["title"], 
+                    "author" : transform_multi_authors(book_object),
+                    "description" : clean_book_description(book_object),
+                    "image" : book_object["image_url"],
+                    "sm_image" : book_object["small_image_url"]
+                    }
+
+    return book_dict
 
 def get_book_by_id(book_id):
     """Gets the book object and cleans it nicely."""
 
     raw_book = search_book_by_id(book_id)
 
-    book_dict = transform_book_object(raw_book)
+    book_info = transform_book_object(raw_book)
 
-    clean_authors = transform_multi_authors(book_dict)
+    book_dict = transform_book_info_to_dict(book_info)
 
-    clean_description = clean_book_description(clean_authors)
+    return book_dict
 
-    return clean_description
+def add_new_book(book_dict):
+    """Adds a new book to the database."""
 
-def clean_book_description(book_info):
-    """Takes in a book dictionary and returns a clean book description."""
+    gr_id = book_dict["gr_id"]
+    name = book_dict["name"]
+    author = book_dict["author"]
+    description = book_dict["description"]
+    image = book_dict["image"]
+    sm_image = book_dict["sm_image"]
 
-    raw_book_description = book_info["description"]
+    new_book = Book(gr_id=gr_id, name=name, author=author, description=description, image=image, sm_image=sm_image)
 
-    clean = re.compile('<.*?>')
-    book_description = re.sub(clean, '', raw_book_description)
+    db.session.add(new_book)
+    db.session.commit()
 
-    book_info["description"] = book_description
 
-    return book_info
+def transform_book_db_obj_to_dict(book_object):
+    """Turns the book object into a dictionary with only the information used by the app."""
+
+    book_dict = { "book_id" : book_object.book_id,
+                    "gr_id" : book_object.gr_id, 
+                    "name" : book_object.name, 
+                    "author" : book_object.author, 
+                    "description" : book_object.description, 
+                    "image" : book_object.image,
+                    "sm_image" : book_object.sm_image 
+                    }
+
+    return book_dict
 
 def check_if_book(book_id):
     """Checks if the book has already been searched."""
@@ -110,32 +154,10 @@ def check_if_book(book_id):
     query = Book.query.filter_by(gr_id=book_id).first()
 
     if query == None:
-        print("Book not found")
-        # run_new_search(book_id)
+        book_dict = get_book_by_id(book_id)
+        add_new_book(book_dict)
     else:
-        # get_book_info(book_id)
-        print(query)
+        book_dict = transform_book_db_obj_to_dict(query)
 
-def add_new_book(book_info):
-    """Adds a new book to the database."""
-
-    gr_id = book_info["id"]
-    name = book_info["title"]
-    author = book_info["authors"]["author"]["name"]
-    description = book_info["description"]
-    image = book_info["image_url"]
-    sm_image = book_info["small_image_url"]
-
-    new_book = Book(gr_id=gr_id, name=name, author=author, description=description, image=image, sm_image=sm_image)
-
-    db.session.add(new_book)
-    db.session.commit()
-
-def run_new_search(book_id):
-    """Runs search for new book, nlp, playlist, writes to DB"""
-
-    book_search = search_book_by_id(book_id)
-
-    book_info = transform_book_object(book_search)
-
+    return book_dict
 

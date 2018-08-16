@@ -35,15 +35,13 @@ def search():
 
     book_id = request.form["bookselect"]
 
-    book_info = goodreads.get_book_by_id(book_id)
+    book_info = goodreads.check_if_book(book_id)
 
-    book_description = goodreads.clean_book_description(book_info)
-
-    terms_list = nlp.get_key_terms(book_description) 
+    terms_list = nlp.check_for_book_terms(book_info) 
 
     sorted_playlists = spotify.get_sorted_playlists(terms_list)
 
-    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists, book_description=book_description)
+    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists)
 
 @app.route("/goodreads-login")
 def goodreads_login():

@@ -9,10 +9,10 @@
   <br>
   You searched for:
   <br>
-  <img src={{ book.small_image_url }} id="bookcover">
-  <h2>{{ book.title }}</h2>
-  {{ book_description }}
-  {{ book.authors.author.name }}
+  <img src={{ book.sm_image }} id="bookcover">
+  <h2>{{ book.name }}</h2>
+  {{ book.description }}
+  {{ book.author }}
 <br>
 <br>
 {% for playlist in sorted_playlists %}
