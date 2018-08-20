@@ -70,15 +70,23 @@ def check_for_term_id(term):
     else:
         return query.keyword_id
 
-def transform_terms_obj_to_dict(terms_obj):
-    """Takes in a database object and returns a list of terms."""
+def transform_terms_objs_to_list(terms_objs):
+    """Takes in a list of database objects and returns a list of terms."""
+    terms_list = []
+
+    for each_result in terms_objs:
+        query = Keyword.query.filter_by(keyword_id=each_result.keyword_id).first()
+        keyword = query.word
+        terms_list.append(keyword)
+
+    return terms_list
 
 def check_for_book_terms(book_dict):
     """Check if there are any terms associated with a book_id."""
 
     if book_dict["book_id"] != "New":
         query = BookKeyword.query.filter_by(book_id=book_dict["book_id"]).all()
-        terms_list = "transformquery"
+        terms_list = transform_terms_objs_to_list(query)
     else:
         terms_list = search_new_terms(book_dict)
 

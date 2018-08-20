@@ -56,6 +56,7 @@ class Playlist(db.Model):
     spotify_id = db.Column(db.String(20), nullable=False)
     name = db.Column(db.String(50), nullable=False)
     creator = db.Column(db.String(30), nullable=False)
+    creator_id = db.Column(db.String(30), nullable=False)
     image = db.Column(db.String(200), nullable=False)
     link = db.Column(db.String(200), nullable=False)
 
@@ -66,7 +67,8 @@ class Playlist(db.Model):
                     playlist_id={self.playlist_id} 
                     spotify_id={self.spotify_id} 
                     name={self.name} 
-                    creator={self.creator} 
+                    creator={self.creator}
+                    creator_id={self.creator_id} 
                     image={self.image} 
                     link={self.link}>"""
 
