@@ -22,6 +22,7 @@ def search_key_terms_string(book_description):
         "X-Mashape-Key": PROXEM_API_KEY,
         "Accept": "applications/json",
         "Content-Type": "text/plain",
+        "nbtopterms" : 10,
 
 
     }
@@ -116,4 +117,5 @@ def add_new_terms_for_book(book_dict, terms_list):
     for term in terms_list:
         add_new_term(term)
         add_new_term_for_book(book_id, term)
+
 

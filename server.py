@@ -39,7 +39,7 @@ def search():
 
     terms_list = nlp.check_for_book_terms(book_info) 
 
-    sorted_playlists = spotify.get_sorted_playlists(terms_list)
+    sorted_playlists = spotify.master_search(terms_list)
 
     return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists)
 

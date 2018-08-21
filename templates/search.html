@@ -16,7 +16,9 @@
 <br>
 <br>
 {% for playlist in sorted_playlists %}
+    <img src={{ playlist["image"]}} id="playlistcover" style="width:300px;height:300px;">
     {{ playlist["name"] }}
+    <a href={{ playlist["link"] }} target="_blank">Open in Spotify</a>
     <br>
 {% endfor %}
     

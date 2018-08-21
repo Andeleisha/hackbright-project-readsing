@@ -53,10 +53,10 @@ class Playlist(db.Model):
     __tablename__ = "playlists"
 
     playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    spotify_id = db.Column(db.String(20), nullable=False)
-    name = db.Column(db.String(50), nullable=False)
-    creator = db.Column(db.String(30), nullable=False)
-    creator_id = db.Column(db.String(30), nullable=False)
+    spotify_id = db.Column(db.String(30), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    creator = db.Column(db.String(50), nullable=True)
+    creator_id = db.Column(db.String(50), nullable=False)
     image = db.Column(db.String(200), nullable=False)
     link = db.Column(db.String(200), nullable=False)
 
