@@ -2,7 +2,7 @@
 import os
 import json
 import requests
-# import grequests
+from requests_futures.sessions import FuturesSession
 from nlp import check_for_term_id
 from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect_to_db, db
 
@@ -22,7 +22,8 @@ def master_search(terms_list):
 
     new_search_terms = check_terms_no_playlists(terms_list)
 
-    search_responses = search_all_terms_for_playlists(new_search_terms)
+    # search_responses = search_all_terms_for_playlists(new_search_terms)
+    search_responses = try_async_search(new_search_terms)
 
     new_playlists = parse_and_write(new_search_terms, search_responses)
 
@@ -95,7 +96,7 @@ def check_terms_no_playlists(terms_list):
 
     for each_term in terms_list:
         query = check_term_for_playlists(each_term)
-        if query == None:
+        if query == []:
             new_terms.append(each_term)
 
     return new_terms
@@ -148,22 +149,29 @@ def parse_and_write(terms_list, search_responses):
 
     playlist_dicts = []
 
+
     for each_response in search_responses:
         list_of_playlists = parse_search_object(each_response)
-        transformed_playlists = transform_list_of_playlists(list_of_playlists)
-        playlist_dicts = playlist_dicts + transformed_playlists
-        for each_playlist in each_response:
-            add_playlist_to_db(each_playlist)
-            spotify_id = each_playlist["id"]
-            add_playlist_term_to_db(terms_list[i], spotify_id)
-        i += 1
+        if list_of_playlists != []:
+            print(f"""Current term:{terms_list[i]}""")
+            transformed_playlists = transform_list_of_playlists(list_of_playlists)
+            playlist_dicts = playlist_dicts + transformed_playlists
+            for each_playlist in list_of_playlists:
+                add_playlist_to_db(each_playlist)
+                spotify_id = each_playlist["id"]
+                add_playlist_term_to_db(terms_list[i], spotify_id)
+            i += 1
+        else:
+            i += 1
 
     return playlist_dicts
 
 def parse_search_object(search_object):
     """Takes a response, turns it into JSON, returns only the search results."""
 
-    clean = json.loads(search_object.text)
+    present = search_object.result()
+
+    clean = json.loads(present.text)
 
     list_of_playlists = clean["playlists"]["items"]
 
@@ -173,10 +181,13 @@ def transform_list_of_playlists(list_of_playlists):
     """Loops through a list and returns a list of dictionaries."""
 
     new_list = []
+    i = 0
 
     for each_playlist in list_of_playlists:
+        print(f"""Playlist Index:{i}""")
         new_dict = transform_playlist_to_dict(each_playlist)
         new_list.append(new_dict)
+        i += 1
 
     return new_list
 
@@ -197,9 +208,13 @@ def clean_images(playlist_object):
     """Inserts a placeholder image if no image to display."""
 
     if playlist_object["images"] == []:
-        playlist_object["images"] == "https://i.imgur.com/aGUOi4m.jpg"
+        playlist_object["images"] = "https://i.imgur.com/aGUOi4m.jpg"
+    elif type(playlist_object["images"]) == str:
+        playlist_object["images"] = playlist_object["images"]
     else:
-        playlist_object["images"] == playlist_object["images"][0]["url"]
+        playlist_object["images"] = playlist_object["images"][0]["url"]
+
+    # playlist_object["images"] = "https://i.imgur.com/aGUOi4m.jpg"
 
     return playlist_object["images"]
 
@@ -208,7 +223,7 @@ def add_playlist_to_db(playlist_object):
     """Takes a playlist object and adds it to the DB."""
     spotify_id = playlist_object["id"]
     name = playlist_object["name"]
-    image = playlist_object["images"][0]["url"]
+    image = clean_images(playlist_object)
     creator = playlist_object["owner"]["display_name"]
     creator_id = playlist_object["owner"]["id"]
     link = playlist_object["external_urls"]["spotify"]
@@ -316,6 +331,43 @@ def rank_playlists(list_of_playlists):
 #     responses = grequests.map(search_requests)
 
 #     return responses
+
+def try_async_search(terms_list):
+    """Attempt at async requests with session."""
+    sp_token_url = "https://accounts.spotify.com/api/token"
+
+    sp_request_payload = {
+        "grant_type": "client_credentials",
+        'client_id': SPOTIFY_CLIENT_ID,
+        'client_secret': SPOTIFY_CLIENT_SECRET,
+    }
+
+    sp_request = requests.post(url=sp_token_url, data=sp_request_payload)
+
+    sp_response_data = json.loads(sp_request.text)
+    access_token = sp_response_data["access_token"]
+    # token_type = sp_response_data["token_type"]
+    # expires_in = sp_response_data["expires_in"]
+
+    search_api_endpoint = "https://api.spotify.com/v1/search"
+
+    authorization_header = {"Authorization": "Bearer {}".format(access_token)}
+
+    s = FuturesSession()
+
+    responses = []
+
+    for term in terms_list:
+        search_args = {
+            "q" : term, 
+            "type" : "playlist"
+        }
+
+        pending_request = s.get(url=search_api_endpoint, headers=authorization_header, params=search_args)
+        responses.append(pending_request)
+
+    return responses
+
 
 
 

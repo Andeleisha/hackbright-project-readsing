@@ -54,10 +54,10 @@ class Playlist(db.Model):
 
     playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     spotify_id = db.Column(db.String(30), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
     creator = db.Column(db.String(50), nullable=True)
     creator_id = db.Column(db.String(50), nullable=False)
-    image = db.Column(db.String(200), nullable=False)
+    image = db.Column(db.String(200), nullable=True)
     link = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
