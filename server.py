@@ -19,14 +19,18 @@ def homepage():
 @app.route("/interim-search", methods=["POST"])
 def interim_search():
     # TO DO: Error handling if not 200 response 
+    # print(request.form)
+    # print(request.args)
     raw_user_search = request.form["booksearch"]
+    print(raw_user_search)
+
 
     search_results = goodreads.search_for_book(raw_user_search)
 
     if search_results == "Error":
         return render_template("error.html")
     else:
-        return render_template("interim-search.html", search_results=search_results)
+        return jsonify(search_results)
 
 @app.route("/search", methods=["POST"])
 def search():
