@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, g, render_template
+from flask import Flask, request, redirect, g, render_template, jsonify
 import goodreads
 import nlp
 import spotify
@@ -37,11 +37,11 @@ def search():
 
     book_info = goodreads.check_if_book(book_id)
 
-    terms_list = nlp.check_for_book_terms(book_info) 
+    # terms_list = nlp.check_for_book_terms(book_info) 
 
-    sorted_playlists = spotify.master_search(terms_list)
+    # sorted_playlists = spotify.master_search(terms_list)
 
-    return render_template("search.html", book=book_info, sorted_playlists=sorted_playlists)
+    return render_template("search.html", book=book_info)
 
 @app.route("/goodreads-login")
 def goodreads_login():
@@ -93,6 +93,40 @@ def my_music():
     # NTH: Show user's playlists
     # NTH: allow user to recommend playlists
     pass
+
+@app.route("/get-playlists", methods=["POST"])
+def get_playlists():
+    # In Jinja, import scripts to make AJAX work (jquery)
+    # Also JS
+    # Pass jinja variables in javascript: give them IDs in HTML
+    # Make post call that will pass the description info to ajax route
+    # Get the info on the AJAX route
+    # Process as normal
+    # JSONIFY sorted_playlists
+    book_id = request.form.get("book_id")
+    
+
+    gr_id = request.form.get("gr_id")
+    
+
+    description = request.form.get("description")
+    
+
+    book_info = { "book_id" : book_id, 
+                    "gr_id" : gr_id,
+                    "description" : description}
+    print(type(book_info))
+    print(book_info)
+
+    terms_list = nlp.check_for_book_terms(book_info)
+    print(terms_list) 
+
+    sorted_playlists = spotify.master_search(terms_list)
+    print(sorted_playlists)
+    
+
+    return jsonify(sorted_playlists)
+
 
 if __name__ == "__main__":
     connect_to_db(app)

@@ -153,13 +153,12 @@ def parse_and_write(terms_list, search_responses):
     for each_response in search_responses:
         list_of_playlists = parse_search_object(each_response)
         if list_of_playlists != []:
-            print(f"""Current term:{terms_list[i]}""")
             transformed_playlists = transform_list_of_playlists(list_of_playlists)
             playlist_dicts = playlist_dicts + transformed_playlists
-            for each_playlist in list_of_playlists:
-                add_playlist_to_db(each_playlist)
-                spotify_id = each_playlist["id"]
-                add_playlist_term_to_db(terms_list[i], spotify_id)
+            # for each_playlist in list_of_playlists:
+            #     add_playlist_to_db(each_playlist)
+            #     spotify_id = each_playlist["id"]
+            #     add_playlist_term_to_db(terms_list[i], spotify_id)
             i += 1
         else:
             i += 1
@@ -184,7 +183,6 @@ def transform_list_of_playlists(list_of_playlists):
     i = 0
 
     for each_playlist in list_of_playlists:
-        print(f"""Playlist Index:{i}""")
         new_dict = transform_playlist_to_dict(each_playlist)
         new_list.append(new_dict)
         i += 1

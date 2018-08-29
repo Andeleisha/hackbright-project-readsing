@@ -4,22 +4,24 @@
 {% block title %}Search{% endblock %}
 
 {% block body %}
+<script src="http://code.jquery.com/jquery.js"></script>
   Andy is gettin shit done!! 
   <br>
   <br>
   You searched for:
   <br>
   <img src={{ book.sm_image }} id="bookcover">
-  <h2>{{ book.name }}</h2>
-  {{ book.description }}
-  {{ book.author }}
+  <h2 id="bookname">{{ book.name }}</h2>
+  <h3 id="bookauthor">{{ book.author }}</h3>
+  <p id=bookdescription>{{ book.description }}</p>
+<input id=bookid type=hidden value={{ book.book_id }}>
+<input id=grid type=hidden value={{ book.gr_id }}>
 <br>
 <br>
-{% for playlist in sorted_playlists %}
-    <img src={{ playlist["image"]}} id="playlistcover" style="width:300px;height:300px;">
-    {{ playlist["name"] }}
-    <a href={{ playlist["link"] }} target="_blank">Open in Spotify</a>
-    <br>
-{% endfor %}
+<div id="searchresults">
+Loading results
+</div>
+
+<script src="../static/get-playlists.js"></script>
     
 {% endblock %}
