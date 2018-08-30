@@ -22,8 +22,6 @@ def interim_search():
     # print(request.form)
     # print(request.args)
     raw_user_search = request.form["booksearch"]
-    print(raw_user_search)
-
 
     search_results = goodreads.search_for_book(raw_user_search)
 
