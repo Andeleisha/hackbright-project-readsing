@@ -9,9 +9,24 @@ $(document).ready(function() {
   const bookInfo =  {"book_id" : $("#bookid").val(), "gr_id" : $("#grid").val(), "description" : $("#bookdescription").text()}
 
   function replacePlaylistResults(results) {
-    const playlist = results.map(x => x.name)
+    // const playlist = results.map(x => x.name)
 
-    $("#searchresults").text(playlist);
+    for (let playlist of results) {
+      const newElement = document.createElement('div');
+      newElement.id = "playlist"; 
+      newElement.innerHTML = playlist.name 
+      document.body.appendChild(newElement);
+    }
+
+    // $("#searchresults").text(
+    //   for (let playlist of results) {
+    //     const newElement = document.createElement('div');
+    //     newElement.id = "playlist"; 
+    //     newElement.innerHTML = playlist.name 
+    //     document.body.appendChild(newElement);
+    // }
+
+      // );
     console.log(results)
   }
 

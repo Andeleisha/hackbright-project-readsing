@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, g, render_template, jsonify
+from flask import Flask, request, redirect, g, render_template, jsonify, session
 import goodreads
 import nlp
 import spotify
@@ -7,6 +7,7 @@ from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect
 
 ##############################################################################
 app = Flask(__name__)
+app.secret_key = 'STUFFF'
 
 ##############################################################################
 
@@ -23,21 +24,28 @@ def interim_search():
     # print(request.args)
     raw_user_search = request.form["booksearch"]
 
-    search_results = goodreads.search_for_book(raw_user_search)
+    try:
 
-    if search_results == "Error":
+        search_results = goodreads.search_for_book(raw_user_search)
+
+    except:
         return render_template("error.html")
-    else:
-        return jsonify(search_results)
 
-@app.route("/search", methods=["POST"])
+    
+    return jsonify(search_results)
+
+@app.route("/search")
 def search():
     # TO DO: Error handling
     # TO DO: Clean book description
+    
+    book_id = session["book_id"]
 
-    book_id = request.form["bookselect"]
+    try:
+        book_info = goodreads.check_if_book(book_id)
 
-    book_info = goodreads.check_if_book(book_id)
+    except:
+        return render_template("error.html")
 
     # terms_list = nlp.check_for_book_terms(book_info) 
 
@@ -96,6 +104,14 @@ def my_music():
     # NTH: allow user to recommend playlists
     pass
 
+@app.route("/bookselect", methods=["POST"])
+def bookselect():
+    book_id = request.form.get("book_id")
+
+    session["book_id"] = book_id
+
+    return book_id
+
 @app.route("/get-playlists", methods=["POST"])
 def get_playlists():
     # In Jinja, import scripts to make AJAX work (jquery)
@@ -117,14 +133,13 @@ def get_playlists():
     book_info = { "book_id" : book_id, 
                     "gr_id" : gr_id,
                     "description" : description}
-    print(type(book_info))
-    print(book_info)
+    
 
     terms_list = nlp.check_for_book_terms(book_info)
-    print(terms_list) 
+    
 
     sorted_playlists = spotify.master_search(terms_list)
-    print(sorted_playlists)
+    
     
 
     return jsonify(sorted_playlists)

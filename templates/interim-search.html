@@ -8,7 +8,7 @@
     <form action="/search" method="POST">
     {% for book in search_results %}
     <br>
-    <input type="radio" name="bookselect" value={{ book["best_book"]["id"]["#text"] }}>
+    <input type="radio" name="oldbookselect" value={{ book["best_book"]["id"]["#text"] }}>
     <input type="submit" value="Choose this book">
     <img src={{ book.best_book.small_image_url }} id=bookcover>
     Title: {{ book.best_book.title }}

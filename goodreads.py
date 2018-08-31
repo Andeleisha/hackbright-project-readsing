@@ -30,7 +30,7 @@ def transform_search_goodreads(search_response):
 
     if search_response.status_code != 200:
         print(search_response.status_code)
-        search_results = "Error"
+        raise Exception("Goodreads API not responding.")
     else:
         response_dict = xmltodict.parse(search_response.content)
         search_results = response_dict["GoodreadsResponse"]["search"]["results"]["work"]
