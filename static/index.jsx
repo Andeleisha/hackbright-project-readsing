@@ -20,6 +20,7 @@ function postBookSelect(book_id) {
 
 const BookListItem = ({book, onBookSelect}) => {
     const imageURL = book.best_book.small_image_url;
+    const bookName = book.best_book.title
     const book_id = book.best_book.id["#text"]
 
 //Use a callback function to make an AJAX/Fetch Post, then redirect separately (window.location.href=url)
@@ -27,7 +28,9 @@ const BookListItem = ({book, onBookSelect}) => {
     return (
         <li onClick={() => postBookSelect(book_id)}> 
             <div>
-            <img src={imageURL} />            
+            <img src={imageURL} />
+            <p id="bookTitle">{bookName}</p>
+
             </div> 
         </li>
     );
@@ -90,6 +93,8 @@ class App extends React.Component {
             books: [],
             selectedBook: null
         };
+
+        this._debouncedBookSearch = _.debounce( (term) => this._bookSearch(term), 500);
     }
 
     _bookSearch(term) {
@@ -120,10 +125,11 @@ class App extends React.Component {
     render () {
         
         console.log(this.state)
+
         return (
 
                 <div>
-                    <SearchBar onSearchTermChange={term => this._bookSearch(term)} />
+                    <SearchBar onSearchTermChange={this._debouncedBookSearch}/>
                     <BookList
                         onBookSelect={selectedBook => this.setState({selectedBook})}
                         books={this.state.books} />

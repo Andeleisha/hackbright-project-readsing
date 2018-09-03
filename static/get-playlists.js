@@ -17,7 +17,13 @@ $(document).ready(function() {
     for (let playlist of results) {
       const newElement = document.createElement('div');
       newElement.id = "playlist"; 
-      newElement.innerHTML = playlist["name"] 
+      newElement.innerHTML = `
+      <div class="playlist">
+        <div>${playlist["name"]}</div>
+        <div><img src="${playlist["image"]}"></div>
+        <div><a href="${playlist["link"]}">Open in Spotify</a></div>
+      </div>
+      ` 
       resultsContainer.appendChild(newElement);
     }
 
