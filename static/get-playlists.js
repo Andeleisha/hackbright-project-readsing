@@ -8,14 +8,17 @@ $(document).ready(function() {
 
   const bookInfo =  {"book_id" : $("#bookid").val(), "gr_id" : $("#grid").val(), "description" : $("#bookdescription").text()}
 
+  const resultsContainer = document.querySelector("#searchresults");
+
   function replacePlaylistResults(results) {
     // const playlist = results.map(x => x.name)
+    resultsContainer.innerHTML = ""
 
     for (let playlist of results) {
       const newElement = document.createElement('div');
       newElement.id = "playlist"; 
-      newElement.innerHTML = playlist.name 
-      document.body.appendChild(newElement);
+      newElement.innerHTML = playlist["name"] 
+      resultsContainer.appendChild(newElement);
     }
 
     // $("#searchresults").text(
