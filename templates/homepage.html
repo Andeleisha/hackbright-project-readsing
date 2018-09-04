@@ -1,22 +1,28 @@
 {% extends 'base.html' %}
 
 
-{% block title %}Homepage{% endblock %}
+{% block title %}ReadSing{% endblock %}
 
 {% block body %}
-  You are awesome, Andrea! 
-<br>
-<br>
-Let's search for some books. 
-<br>
-<br>
-<form action="/interim-search" method="POST">
-    Search:<input type="text" name="bookstuff">
-    <input type="submit" value="Search for a book!">
-</form>
 
-<div id="root">Book results will appear here.</div>
+<div class="row">
+    <div class="col-6 offset-3">
+        <br>
+        <br>
+        <h1>ReadSing</h1>
+        <br>
+        <br>
+    </div>
+</div>
 
+<div class="row">
+    <img id="header-image" src="/static/magic-book.jpg">
+</div>
+
+<div class="row">
+    <br>
+    <div id="root">Book results will appear here.</div>
+</div>
 
 
 <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>

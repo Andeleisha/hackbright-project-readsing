@@ -1,0 +1,39 @@
+/*#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #30323D;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}*/
+
+body {
+    background-color: #F8FCDA;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+h1 {
+  color: #553B08;
+}
+
+p {
+  color: #553B08;
+}
+
+#header-image {
+  width: 50%;
+  height: 50%;
+}

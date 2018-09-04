@@ -69,11 +69,29 @@ class SearchBar extends React.Component {
 
     render () {
         return (
-            <div className="search-bar">
-                <input
-                    value={this.state.term}
-                    onChange={event => this.onInputChange(event.target.value)} />
+            
+            <div>
+            <div className="row">
+                <div className="col-6 offset-3">
+                    <div className="input-group input-group-lg" id="search-bar">
+                    
+                        <input id="searchbox" className="form-control"
+                            value={this.state.term}
+                            onChange={event => this.onInputChange(event.target.value)} />
+                        <div className="input-group-append">
+                            <span className="input-group-text" id="basic-addon2">Search</span>
+                        </div>
+
                     </div>
+                </div>
+            </div>
+            <div className="row"> 
+                <div className="col-6 offset-3">   
+                <p id="attribution">Search powered by Goodreads.</p>
+            </div>
+            </div>
+            </div>
+
         );
     }
 
@@ -95,6 +113,8 @@ class App extends React.Component {
         };
 
         this._debouncedBookSearch = _.debounce( (term) => this._bookSearch(term), 500);
+
+        this._bookSearch("harry potter")
     }
 
     _bookSearch(term) {
