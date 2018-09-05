@@ -27,6 +27,16 @@ body {
 
 h1 {
   color: #553B08;
+  text-align: center;
+}
+
+h2 {
+  color: #553B08;
+  vertical-align: center;
+}
+
+h3 {
+  color: #553B08;
 }
 
 p {
@@ -36,4 +46,8 @@ p {
 #header-image {
   width: 50%;
   height: 50%;
+}
+
+#search-bar {
+  width: 400px;
 }

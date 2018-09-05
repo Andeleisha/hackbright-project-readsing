@@ -26,13 +26,12 @@ const BookListItem = ({book, onBookSelect}) => {
 //Use a callback function to make an AJAX/Fetch Post, then redirect separately (window.location.href=url)
 
     return (
-        <li onClick={() => postBookSelect(book_id)}> 
-            <div>
-            <img src={imageURL} />
-            <p id="bookTitle">{bookName}</p>
-
-            </div> 
-        </li>
+        <div id="bookItem" onClick={() => postBookSelect(book_id)}> 
+            <div className="row">
+                <img src={imageURL} />
+                <h2 id="bookTitle">{bookName}</h2>
+            </div>
+        </div>
     );
 
 
@@ -87,7 +86,7 @@ class SearchBar extends React.Component {
             </div>
             <div className="row"> 
                 <div className="col-6 offset-3">   
-                <p id="attribution">Search powered by Goodreads.</p>
+                <p id="attribution" class="center">Search powered by Goodreads.</p>
             </div>
             </div>
             </div>
