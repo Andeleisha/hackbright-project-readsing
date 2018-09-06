@@ -25,8 +25,7 @@ def interim_search():
     raw_user_search = request.form["booksearch"]
 
     try:
-
-        search_results = goodreads.search_for_book(raw_user_search)
+        search_results = goodreads.search_goodreads_for_book(raw_user_search)
 
     except:
         return render_template("error.html")
@@ -42,7 +41,7 @@ def search():
     book_id = session["book_id"]
 
     try:
-        book_info = goodreads.check_if_book(book_id)
+        book_info = goodreads.check_for_book(book_id)
 
     except:
         return render_template("error.html")
@@ -52,57 +51,6 @@ def search():
     # sorted_playlists = spotify.master_search(terms_list)
 
     return render_template("search.html", book=book_info)
-
-@app.route("/goodreads-login")
-def goodreads_login():
-    # Login with goodreads
-    pass
-
-@app.route("/goodreads-login/callback")
-def goodreads_callback():
-    # Store access token
-    # Redirect to /mybooks
-    pass
-    
-@app.route("/goodreads-logout")
-def goodreads_logout():
-    # Remove user_id from session
-    pass
-
-@app.route("/my-books")
-def my_books():
-    # Get access token from DB
-    # Show shelves
-    pass
-
-@app.route("/spotify-login")
-def spotify_auth():
-    # Spotify auth
-    # Redirect to Callback
-    pass
-
-@app.route("/spotify-login/callback")
-def spotify_callback():
-    # Create app-side user account
-    # Get access token etc
-    # Store access token, refresh token etc in user account
-    # Store user_id in the session
-
-    # Redirect back to /, flash "logged in message"
-    pass
-
-@app.route("/spotify-logout")
-def spotify_logout():
-    # Remove user from session
-    pass
-
-@app.route("/my-music")
-def my_music():
-    # Check user_id in session
-    # Get access token from DB
-    # NTH: Show user's playlists
-    # NTH: allow user to recommend playlists
-    pass
 
 @app.route("/bookselect", methods=["POST"])
 def bookselect():
@@ -143,6 +91,12 @@ def get_playlists():
     
 
     return jsonify(sorted_playlists)
+
+@app.route("/recent-books")
+def recent_books():
+    last_five_books = goodreads.get_recent_books()
+
+    return jsonify(last_five_books)
 
 
 if __name__ == "__main__":

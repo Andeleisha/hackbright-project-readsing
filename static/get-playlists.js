@@ -18,10 +18,22 @@ $(document).ready(function() {
       const newElement = document.createElement('div');
       newElement.id = "playlist"; 
       newElement.innerHTML = `
-      <div class="playlist">
-        <div>${playlist["name"]}</div>
-        <div><img src="${playlist["image"]}"></div>
-        <div><a href="${playlist["link"]}">Open in Spotify</a></div>
+      <div id="playlist" class="card flex-row flex-wrap">
+        <div class="col-auto">
+          <div className="card-header border-0">
+            <img id="playlistCover" src="${playlist["image"]}" height="300" width="300"/>
+          </div>
+        </div>
+
+        <div class="col">
+          <div className="card-block px-2">
+            <h5>${playlist["name"]}</h5>
+            <a href="${playlist["link"]}">
+              <img src="/static/Spotify_Icon.png" height="50" width="50"/>
+              Open in Spotify
+            </a>
+          </div>
+        </div>
       </div>
       ` 
       resultsContainer.appendChild(newElement);

@@ -19,18 +19,29 @@ function postBookSelect(book_id) {
 
 
 const BookListItem = ({book, onBookSelect}) => {
-    const imageURL = book.best_book.small_image_url;
-    const bookName = book.best_book.title
-    const book_id = book.best_book.id["#text"]
+    const imageURL = book.image;
+    const bookName = book.name
+    const book_id = book.gr_id
+    const bookAuthor = book.author
 
 //Use a callback function to make an AJAX/Fetch Post, then redirect separately (window.location.href=url)
 
     return (
-        <div id="bookItem" onClick={() => postBookSelect(book_id)}> 
-            <div className="row">
-                <img src={imageURL} />
-                <h2 id="bookTitle">{bookName}</h2>
+        <div id="bookItem" className="card flex-row flex-wrap" onClick={() => postBookSelect(book_id)}> 
+            
+            <div className="col-auto">
+                <div className="card-header border-0">
+                    <img id="bookCover" src={imageURL} />
+                </div>
             </div>
+            
+            <div className="col">
+                <div className="card-block px-2">
+                    <h5 id="bookTitle" className="card-title">{bookName}</h5>
+                    <p id="bookAuthor" className="card-text">by {bookAuthor}</p>
+                </div>
+            </div>    
+            
         </div>
     );
 
@@ -43,7 +54,7 @@ const BookList =  (props) => {
         return(
             <BookListItem
                 onBookSelect={props.onBookSelect}
-                key={book.best_book.id["#text"]}
+                key={book.gr_id}
                 book={book} />
             );
     });
@@ -69,26 +80,24 @@ class SearchBar extends React.Component {
     render () {
         return (
             
-            <div>
-            <div className="row">
-                <div className="col-6 offset-3">
-                    <div className="input-group input-group-lg" id="search-bar">
-                    
-                        <input id="searchbox" className="form-control"
-                            value={this.state.term}
-                            onChange={event => this.onInputChange(event.target.value)} />
-                        <div className="input-group-append">
-                            <span className="input-group-text" id="basic-addon2">Search</span>
+            <div id="searchArea" className="center">
+                <div className="row">
+                    <div className="col center">
+                        <div className="input-group input-group-lg" id="search-bar">
+                            <input id="searchbox" className="form-control"
+                                value={this.state.term}
+                                onChange={event => this.onInputChange(event.target.value)} />
+                            <div className="input-group-append">
+                                <span className="input-group-text" id="basic-addon2">Search</span>
+                            </div>
                         </div>
-
                     </div>
                 </div>
-            </div>
-            <div className="row"> 
-                <div className="col-6 offset-3">   
-                <p id="attribution" class="center">Search powered by Goodreads.</p>
-            </div>
-            </div>
+                <div className="row"> 
+                    <div className="col">   
+                        <p id="attribution" className="center">Search powered by Goodreads.</p>
+                    </div>
+                </div>
             </div>
 
         );
@@ -113,7 +122,7 @@ class App extends React.Component {
 
         this._debouncedBookSearch = _.debounce( (term) => this._bookSearch(term), 500);
 
-        this._bookSearch("harry potter")
+        this._recentBooks()
     }
 
     _bookSearch(term) {
@@ -125,12 +134,9 @@ class App extends React.Component {
             headers: {"Content-type" : "application/x-www-form-urlencoded; charset=UTF-8"},
             body : "booksearch="+term
         })
-            .then(function(response) {
+            .then((response) => {
                 return response.json();
             })
-            // .then(function(myJson) {
-            //     console.log(JSON.stringify(myJson));
-            // });
             .then((myJson) => {
                 console.log(myJson)
                 this.setState({
@@ -141,13 +147,25 @@ class App extends React.Component {
 
     }
 
+    _recentBooks() {
+        fetch("/recent-books")
+            .then((response) => {
+                return response.json();
+            })
+            .then((myJson) =>  {
+                this.setState({ 
+                    books: myJson 
+                })
+            });
+    }
+
     render () {
         
         console.log(this.state)
 
         return (
 
-                <div>
+                <div id="goodreadsSearch">
                     <SearchBar onSearchTermChange={this._debouncedBookSearch}/>
                     <BookList
                         onBookSelect={selectedBook => this.setState({selectedBook})}

@@ -6,28 +6,29 @@
 {% block body %}
 <script src="http://code.jquery.com/jquery.js"></script>
 <div class="row">
-    <div id="bookSearched" class="col-10 offset-1">
-        <br>
-        <br>
-        You searched for:
-        <br>
-        <div class="col-2">
-            <img id="bookcover" src={{ book.sm_image }} >
+    <div id="bookSearched" class="card flex-row flex-wrap">
+        
+        <div class="col-auto">
+            <div className="card-header border-0">
+                    <img id="bookCover" src={{ book.image }} />
+            </div>
         </div>
-        <div class="col-4">
-            <h2 id="bookname">{{ book.name }}</h2>
-            <h3 id="bookauthor">{{ book.author }}</h3>
-        </div>
-        <p id=bookdescription>{{ book.description }}</p>
-        <input id=bookid type=hidden value={{ book.book_id }}>
-        <input id=grid type=hidden value={{ book.gr_id }}>
-        <br>
-        <br>
+
+        <div class="col">
+            <div className="card-block px-2">
+                <h5 id="bookname">{{ book.name }}</h5>
+                <h5 id="bookauthor">by {{ book.author }}</h5>
+                <p id=bookdescription>{{ book.description }}</p>
+                <input id=bookid type=hidden value={{ book.book_id }}>
+                <input id=grid type=hidden value={{ book.gr_id }}>
+            </div>
+        </div>   
     </div>
 </div>
+
 <div id="searchresults">
     <div id="loader">
-    Loading results
+        Loading results
     </div>
 </div>
 

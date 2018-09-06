@@ -25,22 +25,33 @@ body {
     padding: 10px;
 }
 
+.card {
+  background-color: #F8FCDA;
+  border: 3;
+  border-color: #76323F;
+  padding-top: 2px;
+}
+
 h1 {
-  color: #553B08;
+  color: #76323F;
   text-align: center;
+  font-family: 'Abril Fatface', cursive;
 }
 
 h2 {
   color: #553B08;
   vertical-align: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
 h3 {
   color: #553B08;
+  font-family: 'Open Sans', sans-serif;
 }
 
 p {
   color: #553B08;
+  font-family: 'Open Sans', sans-serif;
 }
 
 #header-image {
@@ -50,4 +61,7 @@ p {
 
 #search-bar {
   width: 400px;
+
+.link {
+  color: #76323F;
 }

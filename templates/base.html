@@ -4,9 +4,24 @@
     <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/project.css" >
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Open+Sans" rel="stylesheet">
 </head>
 <body>
-<div class="container-fluid">
+<div class="container">
+    <div class="row">
+        <div class="col-10 offset-1">
+            <br>
+            <br>
+            <h1 class="center">ReadSing</h1>
+            <br>
+            <br>
+            <div class="center">
+                <a href="/">Search for Book </a>
+                |
+                <a href="/about">About</a>
+            </div>
+        </div>
+    </div>
     {% block body %}
       BODY OF PAGE GOES HERE VIA INHERITANCE
 {% endblock %}
