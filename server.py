@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, g, render_template, jsonify, session
 import goodreads
 import nlp
 import spotify
-from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect_to_db
+from model import Book, connect_to_db
 
 
 ##############################################################################

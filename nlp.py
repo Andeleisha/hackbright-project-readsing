@@ -2,7 +2,7 @@
 import os
 import requests
 import json
-from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect_to_db, db
+from model import Book, connect_to_db, db
 
 ##############################################################################
 
@@ -13,8 +13,6 @@ PROXEM_API_KEY = os.environ["PROXEM_API_KEY"]
 
 def search_key_terms_string(book_description):
     """Takes in a string and returns a list of key terms."""
-
-    # book_description = clean_book_description(book_info)
 
     nlp_url = "https://proxem-term-extraction-v1.p.mashape.com/api/TermExtraction/Extract?method=0&nbtopterms=20"
     
@@ -58,64 +56,9 @@ def search_new_terms(book_dict):
 
     terms_list = parse_key_terms(response)
 
-    # add_new_terms_for_book(book_dict, terms_list)
+
 
     return terms_list
 
-# def check_for_term_id(term):
-#     """Check if terms are in DB."""
-#     query=Keyword.query.filter_by(word=term).first()
-
-#     if query == None:
-#         return None
-#     else:
-#         return query.keyword_id
-
-# def transform_terms_objs_to_list(terms_objs):
-#     """Takes in a list of database objects and returns a list of terms."""
-#     terms_list = []
-
-#     for each_result in terms_objs:
-#         query = Keyword.query.filter_by(keyword_id=each_result.keyword_id).first()
-#         keyword = query.word
-#         terms_list.append(keyword)
-
-#     return terms_list
-
-# def check_for_book_terms(book_dict):
-#     """Check if there are any terms associated with a book_id."""
-
-#     if book_dict["book_id"] != "New":
-#         query = BookKeyword.query.filter_by(book_id=book_dict["book_id"]).all()
-#         terms_list = transform_terms_objs_to_list(query)
-#     else:
-#         terms_list = search_new_terms(book_dict)
-
-#     return terms_list
-
-# def add_new_term(term):
-#     """Adds a single new term to the DB."""
-#     new_term = Keyword(word=term)
-
-#     db.session.add(new_term)
-#     db.session.commit()
-
-# def add_new_term_for_book(book_id, term):
-#     """Ads a new term for a book."""
-
-#     new_term = BookKeyword(book_id=book_id, keyword_id=check_for_term_id(term))
-
-#     db.session.add(new_term)
-#     db.session.commit()
-
-# def add_new_terms_for_book(book_dict, terms_list):
-#     """Adds a list of terms to the DB."""
-#     query = Book.query.filter_by(gr_id=book_dict["gr_id"]).first()
-
-#     book_id = query.book_id
-
-#     for term in terms_list:
-#         add_new_term(term)
-#         add_new_term_for_book(book_id, term)
 
 

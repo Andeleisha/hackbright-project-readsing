@@ -21,6 +21,7 @@ class Book(db.Model):
     description = db.Column(db.Text, nullable=False)
     image = db.Column(db.String(200), nullable=False)
     sm_image = db.Column(db.String(200), nullable=False)
+    last_searched = db.Column(db.DateTime)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -32,86 +33,9 @@ class Book(db.Model):
                     author={self.author} 
                     description={self.description} 
                     image={self.image} 
-                    sm_image={self.sm_image}>"""
+                    sm_image={self.sm_image}
+                    last_searched={self.last_searched}>"""
 
-class Keyword(db.Model):
-    """Keywords that have been used."""
-
-    __tablename__ = "keywords"
-
-    keyword_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    word = db.Column(db.String(50), nullable=False)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<Keyword keyword_id={self.keyword_id} word={self.word}>"
-
-class Playlist(db.Model):
-    """Playlists that have been searched."""
-
-    __tablename__ = "playlists"
-
-    playlist_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    spotify_id = db.Column(db.String(30), nullable=False)
-    name = db.Column(db.String(200), nullable=False)
-    creator = db.Column(db.String(50), nullable=True)
-    creator_id = db.Column(db.String(50), nullable=False)
-    image = db.Column(db.String(200), nullable=True)
-    link = db.Column(db.String(200), nullable=False)
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"""<Playlist 
-                    playlist_id={self.playlist_id} 
-                    spotify_id={self.spotify_id} 
-                    name={self.name} 
-                    creator={self.creator}
-                    creator_id={self.creator_id} 
-                    image={self.image} 
-                    link={self.link}>"""
-
-class BookKeyword(db.Model):
-    """Books associated with keywords."""
-
-    __tablename__ = "bookkeywords"
-
-    bk_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey("books.book_id"), index=True)
-    keyword_id = db.Column(db.Integer, db.ForeignKey("keywords.keyword_id"), index=True)
-
-    book = db.relationship("Book",
-                           backref=db.backref("bookkeywords", order_by=bk_id))
-
-    keyword = db.relationship("Keyword",
-                           backref=db.backref("bookkeywords", order_by=bk_id))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<BookKeyword bk_id={self.bk_id} book_id={self.book_id} keyword_id={self.keyword_id}>"
-
-
-class PlaylistKeyword(db.Model):
-    """Playlists associated with keywords."""
-
-    __tablename__ = "playlistkeywords"
-
-    pk_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.playlist_id"), nullable=False)
-    keyword_id = db.Column(db.Integer, db.ForeignKey("keywords.keyword_id"), nullable=False)
-
-    keyword = db.relationship("Keyword",
-                           backref=db.backref("playlistkeywords", order_by=pk_id))
-
-    playlist = db.relationship("Playlist",
-                           backref=db.backref("playlistkeywords", order_by=pk_id))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"<PlaylistKeyword pk_id={self.pk_id} playlist_id={self.playlist_id} keyword_id={self.keyword_id}>"
 
 
 ##############################################################################

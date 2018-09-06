@@ -3,17 +3,14 @@ import os
 import xmltodict 
 import requests
 import re
-from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect_to_db, db
+from model import Book, connect_to_db, db
+import datetime
 
 ##############################################################################
 
 GR_DEV_KEY = os.environ["GOODREADS_DEV_KEY"]
 
-# Search = (direct) request to goodreads
-# Clean - parse in some way
-# Transform - change the object
-# Check - (direct) request to DB
-# Get
+
 ##############################################################################
 
 
@@ -177,12 +174,22 @@ def add_new_book(book_dict):
     description = book_dict["description"]
     image = book_dict["image"]
     sm_image = book_dict["sm_image"]
+    last_searched = datetime.datetime.now()
 
-    new_book = Book(gr_id=gr_id, name=name, author=author, description=description, image=image, sm_image=sm_image)
+    new_book = Book(gr_id=gr_id, name=name, author=author, description=description, image=image, sm_image=sm_image, last_searched=last_searched)
 
     db.session.add(new_book)
     db.session.commit()
 
+def update_or_add_book_db(book_dict):
+    """CHecks to see if the book already exists, if so, updates the timestamp, if not, adds it to DB."""
+    query = Book.query.filter_by(gr_id=book_dict["gr_id"]).first()
+
+    if query == None:
+        add_new_book(book_dict)
+    else:
+        query.last_searched = datetime.datetime.now()
+        db.session.commit()
 
 def transform_book_db_obj_to_dict(book_object):
     """Turns the book object into a dictionary with only the information used by the app."""
@@ -205,7 +212,7 @@ def transform_book_db_obj_to_dict(book_object):
 def get_recent_books():
     """Gets the five most recent books from the database."""
 
-    query = Book.query.all()
+    query = Book.query.order_by("last_searched").all()
 
     last_five_books = []
 

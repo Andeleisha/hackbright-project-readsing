@@ -16,7 +16,7 @@
 }*/
 
 body {
-    background-color: #F8FCDA;
+    background-color: #F5F1ED;
 }
 
 .center {
@@ -26,7 +26,7 @@ body {
 }
 
 .card {
-  background-color: #F8FCDA;
+  background-color: #F5F1ED;
   border: 3;
   border-color: #76323F;
   padding-top: 2px;
@@ -44,7 +44,7 @@ h2 {
   font-family: 'Open Sans', sans-serif;
 }
 
-h3 {
+h3, h4, h5 {
   color: #553B08;
   font-family: 'Open Sans', sans-serif;
 }
@@ -61,7 +61,16 @@ p {
 
 #search-bar {
   width: 400px;
+}
 
-.link {
+a {
   color: #76323F;
+}
+
+#root {
+  border: 3px;
+  border-style: solid;
+  border-color: #76323F;
+  min-width: 690px;
+  min-height: 1020px; 
 }
