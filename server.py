@@ -83,7 +83,7 @@ def get_playlists():
                     "description" : description}
     
 
-    terms_list = nlp.check_for_book_terms(book_info)
+    terms_list = nlp.search_new_terms(book_info)
     
 
     sorted_playlists = spotify.master_search(terms_list)
@@ -97,6 +97,11 @@ def recent_books():
     last_five_books = goodreads.get_recent_books()
 
     return jsonify(last_five_books)
+
+@app.route("/about")
+def about():
+
+    return render_template("about.html")
 
 
 if __name__ == "__main__":

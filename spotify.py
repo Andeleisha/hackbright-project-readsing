@@ -3,7 +3,7 @@ import os
 import json
 import requests
 from requests_futures.sessions import FuturesSession
-from nlp import check_for_term_id
+# from nlp import check_for_term_id
 from model import Book, Keyword, Playlist, BookKeyword, PlaylistKeyword, connect_to_db, db
 
 ##############################################################################
@@ -17,13 +17,13 @@ def master_search(terms_list):
     """Master search"""
     
 
-    raw_existing_playlists = get_existing_playlists_from_list(terms_list)
-    clean_existing_playlists = transform_list_db_playlist_to_dict(raw_existing_playlists)
+    # raw_existing_playlists = get_existing_playlists_from_list(terms_list)
+    # clean_existing_playlists = transform_list_db_playlist_to_dict(raw_existing_playlists)
 
-    new_search_terms = check_terms_no_playlists(terms_list)
+    # new_search_terms = check_terms_no_playlists(terms_list)
 
-    # search_responses = search_all_terms_for_playlists(new_search_terms)
-    search_responses = try_async_search(new_search_terms)
+    # search_responses = async_search_terms(new_search_terms)
+    search_responses = async_search_terms(terms_list)
 
     new_playlists = parse_and_write(new_search_terms, search_responses)
 
@@ -33,115 +33,115 @@ def master_search(terms_list):
 
     return sorted_playlists
 
-def get_existing_playlists_from_list(terms_list):
-    """Get the playlists for a list of terms."""
+# def get_existing_playlists_from_list(terms_list):
+#     """Get the playlists for a list of terms."""
     
-    existing_playlists = []
+#     existing_playlists = []
 
-    for each_term in terms_list:
-        keyword_id = check_for_term_id(each_term)
-        term_pl_assoc = check_term_for_playlists(each_term)
-        if term_pl_assoc != None:
-            for each_assoc in term_pl_assoc:
-                playlist_id = each_assoc.playlist_id
-                playlist = get_playlists_by_id(playlist_id)
-                existing_playlists += playlist
+#     for each_term in terms_list:
+#         keyword_id = check_for_term_id(each_term)
+#         term_pl_assoc = check_term_for_playlists(each_term)
+#         if term_pl_assoc != None:
+#             for each_assoc in term_pl_assoc:
+#                 playlist_id = each_assoc.playlist_id
+#                 playlist = get_playlists_by_id(playlist_id)
+#                 existing_playlists += playlist
 
-    return existing_playlists
+#     return existing_playlists
 
-def check_term_for_playlists(term):
-    """Checks if any playlists are associated with a given term."""
-    keyword_id = check_for_term_id(term)
-    query = PlaylistKeyword.query.filter_by(keyword_id=keyword_id).all()
+# def check_term_for_playlists(term):
+#     """Checks if any playlists are associated with a given term."""
+#     keyword_id = check_for_term_id(term)
+#     query = PlaylistKeyword.query.filter_by(keyword_id=keyword_id).all()
 
-    return query
+#     return query
 
-def get_playlists_by_id(playlist_id):
-    """Get list of playlist objects by id."""
-    query = Playlist.query.filter_by(playlist_id=playlist_id).all()
+# def get_playlists_by_id(playlist_id):
+#     """Get list of playlist objects by id."""
+#     query = Playlist.query.filter_by(playlist_id=playlist_id).all()
 
-    return query
-
-
-def transform_list_db_playlist_to_dict(list_of_playlist_objects):
-    """Transforms a list."""
-    playlists = []
-
-    for each_playlist in list_of_playlist_objects:
-        playlists.append(transform_db_playlist_to_dict(each_playlist))
-
-    return playlists
+#     return query
 
 
-def transform_db_playlist_to_dict(playlist_object):
-    """Transform's a DB object into a dictionary."""
+# def transform_list_db_playlist_to_dict(list_of_playlist_objects):
+#     """Transforms a list."""
+#     playlists = []
+
+#     for each_playlist in list_of_playlist_objects:
+#         playlists.append(transform_db_playlist_to_dict(each_playlist))
+
+#     return playlists
+
+
+# def transform_db_playlist_to_dict(playlist_object):
+#     """Transform's a DB object into a dictionary."""
     
-    new_dict = { "playlist_id" : playlist_object.playlist_id, 
-                    "spotify_id" : playlist_object.spotify_id, 
-                    "name" : playlist_object.name, 
-                    "image" : playlist_object.image, 
-                    "creator" : playlist_object.creator, 
-                    "creator_id" : playlist_object.creator_id, 
-                    "link" : playlist_object.link
+#     new_dict = { "playlist_id" : playlist_object.playlist_id, 
+#                     "spotify_id" : playlist_object.spotify_id, 
+#                     "name" : playlist_object.name, 
+#                     "image" : playlist_object.image, 
+#                     "creator" : playlist_object.creator, 
+#                     "creator_id" : playlist_object.creator_id, 
+#                     "link" : playlist_object.link
 
-    }
+#     }
 
-    return new_dict
+#     return new_dict
 
-def check_terms_no_playlists(terms_list):
-    """Checks a list for terms that have been associated with playlists, 
-    returns a list of terms that have no associatons."""
+# def check_terms_no_playlists(terms_list):
+#     """Checks a list for terms that have been associated with playlists, 
+#     returns a list of terms that have no associatons."""
 
-    new_terms = []
+#     new_terms = []
 
-    for each_term in terms_list:
-        query = check_term_for_playlists(each_term)
-        if query == []:
-            new_terms.append(each_term)
+#     for each_term in terms_list:
+#         query = check_term_for_playlists(each_term)
+#         if query == []:
+#             new_terms.append(each_term)
 
-    return new_terms
+#     return new_terms
 
-def search_all_terms_for_playlists(terms_list):
-    """Loops through terms to search on spotify, returns a list of objects."""
+# def search_all_terms_for_playlists(terms_list):
+#     """Loops through terms to search on spotify, returns a list of objects."""
 
-    all_playlists = []
+#     all_playlists = []
 
-    for each_term in terms_list:
-        response = search_term_for_playlists(each_term)
-        all_playlists.append(response)
+#     for each_term in terms_list:
+#         response = search_term_for_playlists(each_term)
+#         all_playlists.append(response)
 
-    return all_playlists
+#     return all_playlists
 
 
-def search_term_for_playlists(term):
-    """Searches a term on spotify, returns a list of playlists."""
-    sp_token_url = "https://accounts.spotify.com/api/token"
+# def search_term_for_playlists(term):
+#     """Searches a term on spotify, returns a list of playlists."""
+#     sp_token_url = "https://accounts.spotify.com/api/token"
 
-    sp_request_payload = {
-        "grant_type": "client_credentials",
-        'client_id': SPOTIFY_CLIENT_ID,
-        'client_secret': SPOTIFY_CLIENT_SECRET,
-    }
+#     sp_request_payload = {
+#         "grant_type": "client_credentials",
+#         'client_id': SPOTIFY_CLIENT_ID,
+#         'client_secret': SPOTIFY_CLIENT_SECRET,
+#     }
 
-    sp_request = requests.post(url=sp_token_url, data=sp_request_payload)
+#     sp_request = requests.post(url=sp_token_url, data=sp_request_payload)
 
-    sp_response_data = json.loads(sp_request.text)
-    access_token = sp_response_data["access_token"]
-    # token_type = sp_response_data["token_type"]
-    # expires_in = sp_response_data["expires_in"]
+#     sp_response_data = json.loads(sp_request.text)
+#     access_token = sp_response_data["access_token"]
+#     # token_type = sp_response_data["token_type"]
+#     # expires_in = sp_response_data["expires_in"]
 
-    search_api_endpoint = "https://api.spotify.com/v1/search"
+#     search_api_endpoint = "https://api.spotify.com/v1/search"
 
-    authorization_header = {"Authorization": "Bearer {}".format(access_token)}
+#     authorization_header = {"Authorization": "Bearer {}".format(access_token)}
 
-    search_args = {
-        "q" : term, 
-        "type" : "playlist"
-    }
+#     search_args = {
+#         "q" : term, 
+#         "type" : "playlist"
+#     }
 
-    response = requests.get(url=search_api_endpoint, headers=authorization_header, params=search_args)
+#     response = requests.get(url=search_api_endpoint, headers=authorization_header, params=search_args)
 
-    return response
+#     return response
 
 def parse_and_write(terms_list, search_responses):
 
@@ -217,42 +217,42 @@ def clean_images(playlist_object):
     return playlist_object["images"]
 
 
-def add_playlist_to_db(playlist_object):
-    """Takes a playlist object and adds it to the DB."""
-    spotify_id = playlist_object["id"]
-    name = playlist_object["name"]
-    image = clean_images(playlist_object)
-    creator = playlist_object["owner"]["display_name"]
-    creator_id = playlist_object["owner"]["id"]
-    link = playlist_object["external_urls"]["spotify"]
+# def add_playlist_to_db(playlist_object):
+#     """Takes a playlist object and adds it to the DB."""
+#     spotify_id = playlist_object["id"]
+#     name = playlist_object["name"]
+#     image = clean_images(playlist_object)
+#     creator = playlist_object["owner"]["display_name"]
+#     creator_id = playlist_object["owner"]["id"]
+#     link = playlist_object["external_urls"]["spotify"]
 
-    new_playlist = Playlist(spotify_id=spotify_id, name=name, image=image, creator=creator, creator_id=creator_id, link=link)
+#     new_playlist = Playlist(spotify_id=spotify_id, name=name, image=image, creator=creator, creator_id=creator_id, link=link)
 
-    db.session.add(new_playlist)
-    db.session.commit()
-
-
-def add_playlist_term_to_db(term, spotify_id):
-    """Add playlist and term to db."""
-
-    playlist_id = check_playlist_id(spotify_id)
-
-    keyword_id = check_for_term_id(term)
-
-    new_playlist_keyword = PlaylistKeyword(playlist_id=playlist_id, keyword_id=keyword_id)
-
-    db.session.add(new_playlist_keyword)
-    db.session.commit()
+#     db.session.add(new_playlist)
+#     db.session.commit()
 
 
-def check_playlist_id(spotify_id):
-    """Get playlist id by spotify id."""
+# def add_playlist_term_to_db(term, spotify_id):
+#     """Add playlist and term to db."""
 
-    query = Playlist.query.filter_by(spotify_id=spotify_id).first()
+#     playlist_id = check_playlist_id(spotify_id)
 
-    playlist_id = query.playlist_id
+#     keyword_id = check_for_term_id(term)
 
-    return playlist_id
+#     new_playlist_keyword = PlaylistKeyword(playlist_id=playlist_id, keyword_id=keyword_id)
+
+#     db.session.add(new_playlist_keyword)
+#     db.session.commit()
+
+
+# def check_playlist_id(spotify_id):
+#     """Get playlist id by spotify id."""
+
+#     query = Playlist.query.filter_by(spotify_id=spotify_id).first()
+
+#     playlist_id = query.playlist_id
+
+#     return playlist_id
 
 
 def rank_playlists(list_of_playlists):
@@ -330,7 +330,7 @@ def rank_playlists(list_of_playlists):
 
 #     return responses
 
-def try_async_search(terms_list):
+def async_search_terms(terms_list):
     """Attempt at async requests with session."""
     sp_token_url = "https://accounts.spotify.com/api/token"
 
