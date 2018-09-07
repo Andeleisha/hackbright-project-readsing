@@ -84,5 +84,23 @@ a {
   min-height: 1020px; 
   background-color: #F5F1ED;
   padding-top: 15px;
+  margin: 15px;
 
+}
+
+#searchresults {
+  border: 3px;
+  border-style: solid;
+  border-color: #76323F;
+  border-radius: 25px;
+  min-width: 690px;
+  min-height: 332px; 
+  background-color: #F5F1ED;
+  padding-top: 15px;
+  margin: 15px;
+
+}
+
+#bookSearched {
+  min-width: 690px;
 }

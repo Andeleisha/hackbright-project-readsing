@@ -21,7 +21,7 @@ $(document).ready(function() {
       <div id="playlist" class="card flex-row flex-wrap">
         <div class="col-auto">
           <div className="card-header border-0">
-            <img id="playlistCover" src="${playlist["image"]}" height="300" width="300"/>
+            <img id="playlistCover" src="${playlist["image"]}" height="150" width="150"/>
           </div>
         </div>
 
