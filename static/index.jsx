@@ -60,9 +60,9 @@ const BookList =  (props) => {
     });
 
     return (
-        <ul>
+        <div id="bookItem">
         {bookItems}
-        </ul>
+        </div>
     );
 };
 
@@ -80,10 +80,10 @@ class SearchBar extends React.Component {
     render () {
         return (
             
-            <div id="searchArea" className="center">
+            <div id="searchArea">
                 <div className="row">
-                    <div className="col center">
-                        <div className="input-group input-group-lg" id="search-bar">
+                    
+                        <div className="input-group input-group-lg center" id="search-bar">
                             <input id="searchbox" className="form-control"
                                 value={this.state.term}
                                 onChange={event => this.onInputChange(event.target.value)} />
@@ -91,11 +91,11 @@ class SearchBar extends React.Component {
                                 <span className="input-group-text" id="basic-addon2">Search</span>
                             </div>
                         </div>
-                    </div>
+                    
                 </div>
                 <div className="row"> 
                     <div className="col">   
-                        <p id="attribution" className="center">Search powered by Goodreads.</p>
+                        <p id="attribution" className="text-center">Search powered by Goodreads.</p>
                     </div>
                 </div>
             </div>
