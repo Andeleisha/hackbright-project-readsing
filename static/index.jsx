@@ -117,7 +117,8 @@ class App extends React.Component {
 
         this.state = {
             books: [],
-            selectedBook: null
+            selectedBook: null,
+            searchType: "Recent Searches"
         };
 
         this._debouncedBookSearch = _.debounce( (term) => this._bookSearch(term), 500);
@@ -140,7 +141,8 @@ class App extends React.Component {
             .then((myJson) => {
                 console.log(myJson)
                 this.setState({
-                    books : myJson
+                    books : myJson,
+                    searchType: "Search Results"
                 })
             });
         
@@ -167,6 +169,7 @@ class App extends React.Component {
 
                 <div id="goodreadsSearch">
                     <SearchBar onSearchTermChange={this._debouncedBookSearch}/>
+                    <div id="searchType">{this.state.searchType}</div>
                     <BookList
                         onBookSelect={selectedBook => this.setState({selectedBook})}
                         books={this.state.books} />

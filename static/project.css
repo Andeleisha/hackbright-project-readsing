@@ -29,7 +29,7 @@ body {
 
 .card {
   background-color: #F5F1ED;
-  border: 1;
+  border: 3px;
   border-color: #76323F;
   border-radius: 25px;
   border-style: outset;
@@ -103,4 +103,17 @@ a {
 
 #bookSearched {
   min-width: 690px;
+}
+
+#searchType {
+  background-color: #76323F;
+  border-radius: 25px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin: 15px;
+  text-align: center;
+  vertical-align: middle;
+  color: #F5F1ED;
+  font-family: 'Abril Fatface', cursive;
+
 }

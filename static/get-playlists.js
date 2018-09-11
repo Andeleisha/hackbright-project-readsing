@@ -12,7 +12,7 @@ $(document).ready(function() {
 
   function replacePlaylistResults(results) {
     // const playlist = results.map(x => x.name)
-    resultsContainer.innerHTML = ""
+    resultsContainer.innerHTML = `<div id="searchType">Recommended Playlists</div>`
 
     for (let playlist of results) {
       const newElement = document.createElement('div');
