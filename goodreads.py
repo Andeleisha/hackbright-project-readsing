@@ -24,6 +24,7 @@ def check_for_book(book_id):
         add_new_book(book_dict)
     else:
         book_dict = transform_book_db_obj_to_dict(query)
+        update_or_add_book_db(book_dict)
 
     return book_dict
 
