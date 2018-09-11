@@ -1,19 +1,16 @@
-/*#loader {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: 1;
-  width: 150px;
-  height: 150px;
-  margin: -75px 0 0 -75px;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #30323D;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}*/
+#loader {
+  height: 100px;
+  width: 100px;
+  animation-name: spin;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+  /*-webkit-animation: spin 5s linear infinite;*/
 
 body {
     background-image: linear-gradient(rgba(245, 241, 237, 0.3), rgba(245, 241, 237, 0.1)), url("/static/intersection.png");
