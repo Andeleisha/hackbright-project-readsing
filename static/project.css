@@ -1,9 +1,13 @@
 #loader {
-  height: 100px;
-  width: 100px;
+  height: 30px;
+  width: 30px;
   animation-name: spin;
   animation-duration: 5s;
   animation-iteration-count: infinite;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  top: 10%;
 }
 
 @keyframes spin {
