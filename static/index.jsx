@@ -121,7 +121,7 @@ class App extends React.Component {
             searchType: "Recent Searches"
         };
 
-        this._debouncedBookSearch = _.debounce( (term) => this._bookSearch(term), 500);
+        this._debouncedBookSearch = _.debounce( (term) => this._bookSearch(term), 300);
 
         this._recentBooks()
     }
